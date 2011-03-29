@@ -1,6 +1,7 @@
 package com.github.philcali
 import xsbti._
 
+
 object App {
   def main(args: Array[String]) {
     implicit val argv = args
@@ -11,6 +12,7 @@ object App {
       pull("-t"), 
       pull("-s")
     )
+    
     // Start the site generation
     sitegen.crawler.start
   }
