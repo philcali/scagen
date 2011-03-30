@@ -1,14 +1,21 @@
 package com.github.philcali
 import xsbti._
 
-
 object App {
   def main(args: Array[String]) {
     implicit val argv = args
 
+    if(args.contains("-h")) { 
+      usage
+      exit(0)
+    }
+
+    val recurse = args.contains("-r")
+
     val sitegen = new Sitegen(
-      pull("-i") getOrElse ".", 
-      pull("-o") getOrElse "converted", 
+      pull("-i") getOrElse ".",
+      pull("-o") getOrElse "converted",
+      recurse, 
       pull("-t"), 
       pull("-s")
     )
@@ -29,7 +36,9 @@ object App {
 
   def usage = {
     println("""
-  Usage: scagen [-i base-dir] [-o output-dir] [-t template] [-s stylesheet]
+  Usage: scagen [-h] [-r] [-i base-dir] [-o output-dir] [-t template] [-s stylesheet]
+  -h help:       Prints this help
+  -r recursive:  Crawls recursively, and copies to output, mirroring input (defaults false)
   -i base-dir:   Base directory to begin conversion (defaults .)
   -o output-dir: Output the conversion here (defaults converted)
   -t template:   Path to base template (defaults to base.ssp, which is included)
@@ -40,7 +49,10 @@ object App {
 
 class App extends AppMain {
   def run(config: xsbti.AppConfiguration) = {
-    App.main(config.arguments)
+    config.arguments.find(_ == "-h") match {
+      case Some(x) => App.usage
+      case None => App.main(config.arguments)
+    }
     Exit(0)
   }
 

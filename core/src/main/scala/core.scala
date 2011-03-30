@@ -15,6 +15,7 @@ trait Crawling[A] {
 trait CrawlerConfiguration {
   val inputDir: File
   val outputDir: File
+  val recursive: Boolean
 
   def findFirst(what: String => Boolean) = 
     inputDir.listFiles.find(f => what(f.getName))
@@ -40,7 +41,8 @@ trait ConfiguredCrawler extends Crawling[File] {
       }.toList
       val (dirs, files) = correct.partition (_ isDirectory)
       files foreach handler
-      dirs foreach crawl
+      if(recursive)
+        dirs foreach crawl
     }
     def handler(file: File)
   }
@@ -109,7 +111,7 @@ trait ParserCrawlerImpl extends ConfiguredCrawler {
   }
 }
 
-class Sitegen(input: String = ".", output: String = "converted",
+class Sitegen(input: String = ".", output: String = "converted", recursively: Boolean = false,
               base: Option[String] = None, css: Option[String] = None) 
               extends ParserCrawlerImpl 
               with StaticSiteConfiguration {
@@ -119,6 +121,7 @@ class Sitegen(input: String = ".", output: String = "converted",
   val defaultCss = "main.css"
 
   // From configuration
+  val recursive = recursively
   val inputDir = new File(input)
   val outputDir = new File(output)
   val baseTemplate = base.map (new File(_: String))
