@@ -110,19 +110,26 @@ class Sitegen(input: String = ".", output: String = "converted",
               extends ParserCrawlerImpl 
               with StaticSiteConfiguration {
 
+  // Default values
+  val defaultTemp = "base.tpl"
+  val defaultCss = "main.css"
+
+  // From configuration
   val inputDir = new File(input)
   val outputDir = new File(output)
   val baseTemplate = base.map (new File(_: String))
-                         .getOrElse (findFirst(_ == "base.ssp")
-                         .getOrElse (resource("base.ssp"))) 
+                         .getOrElse (findFirst(_ == defaultTemp)
+                         .getOrElse (resource(defaultTemp))) 
   val stylesheet = css.map (new File(_: String))
-                      .getOrElse (findFirst(_ == "main.css")
-                      .getOrElse (resource("main.css")))
+                      .getOrElse (findFirst(_ == defaultCss)
+                      .getOrElse (resource(defaultCss)))
 
+  // From Parser
   val crawler = new ParserCrawler
 
   require(inputDir.exists && inputDir.isDirectory)
 
+  // Pull defaults from classpath
   def resource(what: String) = {
     val contents = getClass.getClassLoader.getResourceAsStream(what)
     val file = new File(what)
