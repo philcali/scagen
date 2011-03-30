@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 
-<%@ val styles: String %>
-<%@ val contents: String %>
-
 <html>
   <head>
     <title>Philip Cali</title>
     <style type="text/css">
-      <%= styles %>
+      #{ styles }#
     </style>
   </head>
   <body>
     <div id="contents">
-      ${unescape(contents)}
+      #{ contents }#
     </div>
   </body>
 </html>
