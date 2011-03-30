@@ -3,7 +3,6 @@ package com.github.philcali
 import java.io.File
 import org.clapper.markwrap._ 
 import scala.io.Source.{fromFile => open}
-import org.fusesource.scalate._
 
 trait Crawling[A] {
   val crawler: Crawler[A]
@@ -51,8 +50,10 @@ trait ParserCrawlerImpl extends ConfiguredCrawler {
   this: StaticSiteConfiguration =>
   
   class ParserCrawler extends FileCrawler {
-    val engine = new TemplateEngine
     val styles = open(stylesheet).getLines.mkString
+    val template = open(baseTemplate).getLines.mkString("\n")
+    // My template replacer
+    val reg = """\#\{\s?(\w+)\s?\}\#""".r
   
     override def excluded = baseTemplate :: super.excluded
 
@@ -69,7 +70,10 @@ trait ParserCrawlerImpl extends ConfiguredCrawler {
         val html = parser.parseToHTML(open(file))
         // Prepare template.
         val tmpData = Map("contents" -> html, "styles" -> styles)
-        val contents = engine.layout(baseTemplate.getAbsolutePath, tmpData) 
+        val contents = reg.findAllIn(template).foldLeft(template) { (temp, matched) =>
+          val reg(key) = matched
+          reg.replaceFirstIn(temp, tmpData.getOrElse(key, ""))
+        }
         val switched = name.split("\\.")(0) + ".html"
         write(new File(newFolders, switched), contents)
       } catch {
@@ -124,15 +128,20 @@ class Sitegen(input: String = ".", output: String = "converted",
                       .getOrElse (findFirst(_ == defaultCss)
                       .getOrElse (resource(defaultCss)))
 
+  // Our Site gen requirements
+  require(inputDir.exists && inputDir.isDirectory)
+
+  if (outputDir.exists && outputDir.isFile) {
+    throw new IllegalArgumentException("%s must be a directory" format(outputDir))
+  }
+
   // From Parser
   val crawler = new ParserCrawler
-
-  require(inputDir.exists && inputDir.isDirectory)
 
   // Pull defaults from classpath
   def resource(what: String) = {
     val contents = getClass.getClassLoader.getResourceAsStream(what)
-    val file = new File(what)
+    val file = new File(inputDir, what)
     val out = new java.io.FileOutputStream(file)
 
     copyStream(contents, out)
