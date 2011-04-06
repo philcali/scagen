@@ -1,4 +1,6 @@
 package com.github.philcali
+package scagen 
+
 import xsbti._
 
 object App {
