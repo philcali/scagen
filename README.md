@@ -34,11 +34,12 @@ So, an example would be
 
     scagen -r -i ~/working -o ~/Dropbox/Public
 
-With this definition, scagen would recursively looks in working, copying everything it finds into
+With this definition, scagen would recursively looks in `working`, copying everything it finds into
 `~/Dropbox/Public` converting `.md`s, `.html`s, `.txt`s, or `.textile`s it finds using a `base.tpl`
 you have in your working, or the one the library provides. Obviously, providing a path to the
 template and style sheet will give you more customization.
 
 ## For Developers
 
-
+Crawl anything and everything.... Talk about this more as the library becomes
+more refined with use.
