@@ -54,7 +54,7 @@ class Sitegen(input: String = ".", output: String = "converted", recursively: Bo
               with StaticSiteConfiguration {
 
   // Default values
-  val defaultTemp = "base.ssp"
+  val defaultTemp = "base.tpl"
   val defaultCss = "main.css"
 
   // From configuration
