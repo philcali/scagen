@@ -11,7 +11,6 @@ object Helpers {
     copyStream(reader, writer)
   }
 
-
   def write(file: File, contents: String) {
     val writer = new java.io.FileWriter(file)
     writer.write(contents)

@@ -2,14 +2,16 @@
 
 <html>
   <head>
-    <title>Philip Cali</title>
+    <title>#{ header }#</title>
     <style type="text/css">
       #{ styles }#
     </style>
   </head>
   <body>
-    <div id="contents">
-      #{ contents }#
+    <div id="page">
+      <div id="contents">
+        #{ contents }#
+      </div>
     </div>
   </body>
 </html>
