@@ -43,3 +43,5 @@ template and style sheet will give you more customization.
 
 Crawl anything and everything.... Talk about this more as the library becomes
 more refined with use.
+
+[conscript]: https://github.com/n8han/conscript#readme
